@@ -56,10 +56,10 @@ proc find_tandems(chrom: string, chrom_data: string, repeat: int, minlen: int) =
     run_len: int
     run_pos = 0
     max_run = 0
-  log("checking $1...".format(chrom))
+  log("checking $1 with $2 bases...".format(chrom, chrom_data.len))
   for pos in 0 .. chrom_data.len - repeat:
     if pos mod 10000000 == 0:
-      log("checked $1:$2...".format(chrom, pos))
+      log("checked $1:$2. max run $3...".format(chrom, pos, max_run))
     if pos < run_pos:
       continue
     var kmer = find_kmer_at_pos(chrom_data, pos, repeat)
@@ -92,14 +92,15 @@ proc find(fh: File, repeat: int, minlen: int) =
         find_tandems(chrom, join(chrom_data, ""), repeat, minlen)
       chrom = line[1..^1]
       pos = 0
+      last_log = 0
       chrom_data = @[]
-      log("processing $1" % chrom)
+      log("processing $1..." % chrom)
     else:
       line = line.toUpperAscii()
       pos += line.len
       chrom_data.add(line)
       if pos - last_log >= 10000000:
-        log("read $1:$2".format(chrom, pos))
+        log("read $1:$2. $3 lines".format(chrom, pos, chrom_data.len))
         last_log = pos
 
   if chrom_data.len > 0:
