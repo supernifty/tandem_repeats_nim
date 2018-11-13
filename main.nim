@@ -113,13 +113,16 @@ proc main() =
     minlen = 6
 
   for kind, key, val in getopt():
+    log("command line option: kind $1 key $2 val $3...".format(kind, key, val))
     case kind
     of cmdArgument:
       discard
     of cmdShortOption, cmdLongOption:
       case key
-      of "repeat", "r": repeat = parseInt(val)
-      of "min", "m": minlen = parseInt(val)
+      of "repeat", "r": 
+        repeat = parseInt(val)
+      of "min", "m": 
+        minlen = parseInt(val)
       else: discard
     of cmdEnd: 
       discard
